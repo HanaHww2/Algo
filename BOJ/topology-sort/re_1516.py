@@ -3,6 +3,7 @@
 
 import sys, collections
 
+input = sys.stdin.readline
 N = int(input())
 
 graph = collections.defaultdict(list)
