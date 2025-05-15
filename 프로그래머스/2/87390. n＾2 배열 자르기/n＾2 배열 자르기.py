@@ -10,7 +10,8 @@ def solution(n, left, right):
     
     for i in range(left, right+1):
         
-        remainder = (i + 1) % n
-        arr.append(max(i // n + 1, n if remainder == 0 else remainder))
+        quotient = i // n + 1
+        remainder = i % n + 1
+        arr.append(max(quotient, remainder))
     
     return arr
