@@ -58,8 +58,8 @@ for i in range(H):
   for j in range(M):
     for k in range(N):
       if arr[i][j][k] == 0:
-        flag = True
-        break
+        print(-1)
+        sys.exit()
       result = max(result, arr[i][j][k])
     
 print(result - 1 if not flag else -1)
