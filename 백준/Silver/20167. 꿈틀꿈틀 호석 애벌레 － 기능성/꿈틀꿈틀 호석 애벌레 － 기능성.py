@@ -12,7 +12,7 @@ def dfs(i, prev, energy):
     return energy
   
   temp = energy
-  if prev == 0:
+  if prev == 0: # 이어서 먹이를 먹지 않아도 되는 경우, 건너띄는 케이스 계산
     temp = dfs(i+1, prev, energy)
   
   prev += leafs[i]
