@@ -11,7 +11,9 @@ def dfs(i, prev, energy):
   if i > N - 1:
     return energy
   
-  temp = dfs(i+1, prev, energy)
+  temp = energy
+  if prev == 0:
+    temp = dfs(i+1, prev, energy)
   
   prev += leafs[i]
   if prev >= K:
