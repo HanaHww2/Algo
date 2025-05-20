@@ -2,7 +2,6 @@
 
 import sys, collections
 
-sys.setrecursionlimit(1_000_000)
 input = sys.stdin.readline
  
 def get_cousins_num(start, roots):
