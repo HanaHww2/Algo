@@ -13,20 +13,29 @@ for _ in range(M):
   table[e].append((s, cost))
 
 def bfs(A:int, B:int, C:int):
+
+  global result
+  visited = [[False] * N for _ in range(N)]
   q = list()
-  heapq.heappush(q, (0, 0, 0, A))
+  heapq.heappush(q, (0, 0, A))
 
   while q:
-    max_c, cost, total, s = heapq.heappop(q)
+    max_c, total, s = heapq.heappop(q)
 
     for (next, n_cost) in table[s]:
 
       n_total = total + n_cost
-      if n_total <= C:
-        if next == B:
-          return max(max_c, n_cost)
-        heapq.heappush(q, (max(max_c, n_cost), n_cost, total+n_cost, next))
+      if n_total > C or visited[s-1][next-1]:
+        continue
+      
+      visited[s-1][next-1] = True
+      if next == B:
+        result = min(result, max(max_c, n_cost))
+        continue
+      heapq.heappush(q, (max(max_c, n_cost), total+n_cost, next))
     
   return -1
 
-print(bfs(A, B, C))
+result = float("inf")
+bfs(A, B, C)
+print(result if result < float("inf") else -1)
