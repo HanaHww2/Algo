@@ -1,6 +1,6 @@
 # https://www.acmicpc.net/problem/21275
 
-import sys
+import sys, collections
 
 input = sys.stdin.readline
 strs = input().split()
@@ -18,21 +18,16 @@ for i in range(2):
 
 a_len = len(nums[0])
 b_len = len(nums[1])
-a_dict = dict()
-b_dict = dict()
+a_dict = collections.defaultdict(set)
+b_dict = collections.defaultdict(set)
 
-cnt = 0
 result = set()
 
 MAX = 36
 
 def check_base():
 
-  global cnt
-
   def dfs(power):
-
-    global cnt
 
     if power > 36:
       return
@@ -54,32 +49,38 @@ def check_base():
       idx += 1
 
     if a_num >= 0:
-      a_dict[a_num] = power
+      a_dict[a_num].add(power)
     if b_num >= 0:
-      b_dict[b_num] = power
+      b_dict[b_num].add(power)
 
-    if a_num in b_dict:
-      result.add(a_num)
-      cnt += 1   
-    if b_num in a_dict:
-      result.add(b_num)  
-      cnt += 1
+    if len(b_dict[a_num]) > 0:
+      result.add(a_num) 
+    if len(a_dict[b_num]) > 0:
+      result.add(b_num)
 
     dfs(power + 1)
 
-  dfs(2)
+  if nums[0] == nums[1]:
 
-  if cnt > 1:
-    return "Multiple"
+    if len(nums[0]) == 1 and nums[0][0] < 35: return "Multiple"
+    return 'Impossible'
+
+  dfs(2)
   
   if not result:
     return 'Impossible'
 
+  if len(result) > 1:
+    return "Multiple"
+
   answer = result.pop()
+
+  if len(a_dict[answer]) > 1 or len(b_dict[answer]) > 1:
+    return 'Multiple'
 
   if a_dict[answer] == b_dict[answer]:
     return 'Impossible'
 
-  return " ".join([str(answer), str(a_dict[answer]), str(b_dict[answer])]) 
+  return " ".join([str(answer), str(a_dict[answer].pop()), str(b_dict[answer].pop())]) 
 
 print(check_base())
