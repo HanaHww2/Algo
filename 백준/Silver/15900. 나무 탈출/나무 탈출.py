@@ -24,17 +24,15 @@ def make_depth(start, d):
   while q:
     s, d = q.popleft()
     visited[s] = 1
-    is_leaf = True
+          
+    if s != 1 and len(tree[s]) == 1:
+      depth += d
+      continue
 
     for c in tree[s]:
 
       if visited[c] != 1:
-        is_leaf = False
-        q.append((c, d + 1))
-          
-    if is_leaf:
-      depth += d
-      
+        q.append((c, d + 1))  
 
 make_depth(1, 0)
 
