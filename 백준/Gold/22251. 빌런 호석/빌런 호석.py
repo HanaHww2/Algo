@@ -1,5 +1,3 @@
-# https://www.acmicpc.net/problem/22251
-
 import sys
 
 input = sys.stdin.readline
@@ -26,12 +24,6 @@ def count_change(fr, to):
    
   table[fr][to] = table[to][fr] = bin(nums[fr]^nums[to]).count('1')
   return table[fr][to]
-
-def list_to_num(arr):
-  num = 0
-  for i in range(len(arr)):
-    num += arr[i] * 10**(len(arr)-i-1)
-  return num
 
 def dfs(curr, idx, p):
   global answer
