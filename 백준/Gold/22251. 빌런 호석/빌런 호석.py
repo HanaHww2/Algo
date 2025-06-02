@@ -1,5 +1,3 @@
-# https://www.acmicpc.net/problem/22251
-
 import sys
 
 input = sys.stdin.readline
@@ -27,25 +25,23 @@ def count_change(fr, to):
   table[fr][to] = table[to][fr] = bin(nums[fr]^nums[to]).count('1')
   return table[fr][to]
 
+def dfs(curr, idx, p):
+  global answer
+
+  if curr > N: return
+  if idx == len(origin):
+    if curr != 0 and curr != X: 
+      answer += 1
+    return
+
+  for i in range(10):
+    cnt = count_change(origin[idx], i)
+    if p >= cnt:
+      dfs(curr * 10 + i, idx + 1, p - cnt)
+
 answer = 0
 origin = [X // 10**i % 10 for i in range(len(str(N))-1, -1, -1)]
 
-for f in range(1, N+1):
-
-  if f == X: continue
-
-  cnt = 0
-  idx = len(origin) - 1
-  while idx > -1:
-    temp = f % 10
-    cnt += count_change(origin[idx], temp)
-    if P < cnt: 
-      break
-
-    idx -= 1
-    f //= 10
-
-  if idx == -1:
-    answer += 1
+dfs(0, 0, P)
 
 print(answer)
