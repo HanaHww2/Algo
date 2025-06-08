@@ -2,60 +2,33 @@
 
 import sys, collections
 
-sys.setrecursionlimit(1_000_000)
 input = sys.stdin.readline
- 
-def get_cousins_num(start, roots):
 
-  global K
-  idx  = start
-  siblings = 0
-  target_cnt = 0
+def make_parent():
+  p = -1
+  for i, a in enumerate(arr):
+    if i > 0 and a != arr[i-1] + 1:
+      p += 1
+    parent[i] = p
+
+def get_cousins_num():
+  global idx
   cnt = 0
-  flag = False
-
-  while roots:
-    parent_nums = roots.popleft()
-
-    while parent_nums > 0:
-
-      temp_siblings = 0
-
-      while True:
-        
-        if idx >= len(arr) or (idx > start and arr[idx] - arr[idx-1] > 1):
-          parent_nums -= 1
-          start = idx
-          roots.append(temp_siblings)
-          break
-
-        if arr[idx] == K:
-          flag= True
-        idx += 1
-        cnt += 1
-        temp_siblings += 1
-
-      if siblings == 0 and flag:
-        siblings = temp_siblings
-
-      if parent_nums == 0:
-        if target_cnt == 0 and flag:
-          target_cnt = cnt
-          break
-
-        cnt = 0
-
-  if flag:
-    return target_cnt - siblings
-
-  return 0
+  for i in range(N):
+    if parent[idx] != parent[i] and parent[parent[i]] == parent[parent[idx]]:
+      cnt += 1
+  return cnt
 
 while True:
-  N, K = map(int, input().split(" "))
+  N, K = map(int, input().split())
   
   if N == 0:
     break
 
-  arr = list(map(int, input().split(" ")))
+  arr = list(map(int, input().split()))
 
-  print(get_cousins_num(1, collections.deque([1])))
+  parent = [0] * N
+  make_parent()
+  idx = arr.index(K)
+
+  print(get_cousins_num())
