@@ -43,8 +43,9 @@ public class Main {
       long num1 = convertNum(arr1, i);
       for (int j = maxNum[1]; j < 37; j++) {
         if (i == j) continue;
-
         long num2 = convertNum(arr2, j);
+        if (num1 < num2) break;
+        
         if (num1 == num2) {
           if (!result.isEmpty()) return "Multiple";
           result.add(new long[]{num1, i, j});
@@ -57,7 +58,7 @@ public class Main {
 
   private static long convertNum(int[] arr, int i) {
     long num = 0L;
-    for(int j = 0; j < arr.length; j++) num += arr[j] * Math.pow(i, arr.length - j - 1);
+    for(int j = 0; j < arr.length; j++) num += arr[j] * (long) Math.pow(i, arr.length - j - 1);
     return num;
   }
 }
