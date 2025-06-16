@@ -12,7 +12,7 @@ public class Main {
 
   static int N;
   static int[][] MAP;
-
+  static Queue<int[]> q;
   static int shortest;
 
   public static void main(String[] args) throws IOException {
@@ -30,50 +30,44 @@ public class Main {
     br.close();
 
     initMap();
-    int result = getShortestBridge();
+    int result = bfs();
     System.out.println(result);
   }
 
-  private static int getShortestBridge() {
-
-    shortest = Integer.MAX_VALUE;
-    for (int i = 0; i < N; i++) {
-      for (int j = 0; j < N; j++) {
-        if (MAP[i][j] < 2) continue;
-        shortest = Math.min(bfs(i, j), shortest);
-      }
-    }
-    return shortest;
-  }
-
-  private static int bfs(int y, int x) {
-    boolean[][] visitedSea = new boolean[N][N];
-    Queue<int[]> q = new ArrayDeque<>(100);
-    q.add(new int[] {y, x, 0});
-    int from = MAP[y][x];
+  private static int bfs() {
+    int[][] overSea = new int[N][N];
+    int min = Integer.MAX_VALUE;
 
     while (!q.isEmpty()) {
       int[] node = q.poll();
 
-      if (node[2] - 1 >= shortest) break;
-      // 다른 섬 도달
-      if (MAP[node[0]][node[1]] != from && MAP[node[0]][node[1]] > 1) return node[2] - 1;
+      if (overSea[node[0]][node[1]] >= min) break;
 
       // 바다 건너
       for (int i = 0; i < dy.length; i++) {
         int ny = node[0] + dy[i], nx = node[1] + dx[i];
-        if (ny < 0 || ny >= N || nx < 0 || nx >= N || MAP[ny][nx] == -1 || MAP[ny][nx] == from) continue;
-        if (visitedSea[ny][nx]) continue;
-        if (MAP[ny][nx] == 0) visitedSea[ny][nx] = true; // 방문 바다 체크
+        if (ny < 0 || ny >= N || nx < 0 || nx >= N || MAP[ny][nx] == -1 || MAP[ny][nx] == node[2]) continue;
 
-        q.add(new int[] {ny, nx, node[2] + 1});
+        // 다른 섬 도달
+        if (MAP[ny][nx] != node[2] && MAP[ny][nx] > 1) {
+          min = Math.min(min, overSea[node[0]][node[1]] + overSea[ny][nx]);
+        }
+
+        // 방문 거리 체크
+        if (MAP[ny][nx] == 0) {
+          overSea[ny][nx] = overSea[node[0]][node[1]] + 1;
+          MAP[ny][nx] = node[2];
+          q.add(new int[] {ny, nx, node[2]});
+        }
       }
     }
-    return Integer.MAX_VALUE;
+    return min;
   }
 
   private static void initMap() {
     int land = 1;
+    q = new ArrayDeque<>(N*N);
+
     for (int i = 0; i < N; i++) {
       for (int j = 0; j < N; j++) {
         if (MAP[i][j] == 1) markMap(i, j, ++land);
@@ -83,15 +77,18 @@ public class Main {
 
   private static void markMap(int y, int x, int land) {
 
+    boolean edge = false;
     for (int d = 0 ; d < dy.length; d++) {
       int ny = y + dy[d], nx = x + dx[d];
       if (ny < 0 || ny >= N || nx < 0 || nx >= N || MAP[ny][nx] == -1 || MAP[ny][nx] > 1) continue;
       if (MAP[ny][nx] == 0) {
         MAP[y][x] = land;
+        edge = true;
         continue;
       }
       MAP[ny][nx] = -1;
       markMap(ny, nx, land);
     }
+    if (edge) q.add(new int[] {y, x, land});
   }
 }
