@@ -1,30 +1,20 @@
+# https://www.acmicpc.net/problem/12865
+
 import sys
+input = sys.stdin.readline
 
-n, k = map(int, sys.stdin.readline().split(" "))
+N, K = map(int, input().split())
+W = [0]
+V = [0]
+DP = [[0] * (K+1) for _ in range(N+1)]
 
-arr = []
-for i in range(n):
-    arr.append(tuple(int(x) for x in sys.stdin.readline().split(" ")))
+for _ in range(N):
+  w, v = map(int, input().split())
+  W.append(w)
+  V.append(v)
 
-dp = [[0] * (k + 1) for _ in range(n + 1)]
-
-# 정렬 없어도 됨.
-arr.sort(key=lambda x: x[0])
-
-def packing():
-    for i, b in enumerate(arr):
-        w, v = b
-
-        if w > k:  # 정렬 수행한 경우
-            return print(dp[i][-1])
-
-        for j in range(1, k + 1):
-            if j < w:
-                dp[i + 1][j] = dp[i][j]
-                continue
-            
-            dp[i + 1][j] = max(dp[i][j], v + dp[i][j - w])
-
-    return print(dp[-1][-1])
-
-packing()
+for i in range(1, N+1):
+  for k in range(1, K+1):
+    if k >= W[i]: DP[i][k] = max(DP[i-1][k], DP[i-1][k-W[i]] + V[i])
+    else: DP[i][k] = DP[i-1][k]
+print(DP[-1][-1])
