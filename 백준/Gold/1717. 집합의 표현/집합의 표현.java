@@ -6,6 +6,10 @@ import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main {
+  static final String YES = "YES";
+  static final String NO = "NO";
+  static final String NEW_LINE = "\n";
+
   static int N, M;
   static int[] PARENT;
 
@@ -21,7 +25,7 @@ public class Main {
       PARENT[i] = i;
     }
 
-    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    StringBuilder sb = new StringBuilder();
     for (int j = 0; j < M; j++) {
       st = new StringTokenizer(br.readLine());
       int i = Integer.parseInt(st.nextToken());
@@ -32,11 +36,13 @@ public class Main {
       if (i == 0) {
         union(a, b);
       } else {
-        bw.write(findParent(a) == findParent(b) ? "YES" : "NO");
-        bw.newLine();
+        sb.append(findParent(a)==findParent(b)? YES : NO).append(NEW_LINE);
       }
     }
+    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    bw.write(sb.toString());
     bw.flush();
+    
     br.close();
     bw.close();
   }
@@ -57,8 +63,6 @@ public class Main {
   private static int findParent(int a) {
 
     if (PARENT[a] == a) return a;
-    int ancestor = findParent(PARENT[a]);
-    PARENT[a] = ancestor;
-    return PARENT[a];
+    return PARENT[a]= findParent(PARENT[a]);
   }
 }
