@@ -20,22 +20,26 @@ public class Main {
             int b = Integer.parseInt(st.nextToken());
             int c = Integer.parseInt(st.nextToken());
 
-            int lmin = Math.min(DP[0][0], DP[1][0]);
-            int rmin = Math.min(DP[1][0], DP[2][0]);
-            int lmax = Math.max(DP[0][1], DP[1][1]);
-            int rmax = Math.max(DP[1][1], DP[2][1]);
-
-            DP[0][0] = a + lmin;
-            DP[2][0] = c + rmin;
-            DP[1][0] = b + Math.min(lmin, rmin);
-
-            DP[0][1] = a + lmax;
-            DP[2][1] = c + rmax;
-            DP[1][1] = b + Math.max(lmax, rmax);
+            calc(a, b, c);
         }
 
-        int max = Math.max(DP[2][1], Math.max(DP[0][1], DP[1][1]));
-        int min = Math.min(DP[2][0], Math.min(DP[0][0], DP[1][0]));
-        System.out.println(max + " " + min);
+        calc(0, 0, 0);
+        System.out.println(DP[1][1] + " " +DP[1][0]);
+    }
+
+    private static void calc(int a, int b, int c) {
+
+        int lmin = Math.min(DP[0][0], DP[1][0]);
+        int rmin = Math.min(DP[1][0], DP[2][0]);
+        int lmax = Math.max(DP[0][1], DP[1][1]);
+        int rmax = Math.max(DP[1][1], DP[2][1]);
+
+        DP[0][0] = a + lmin;
+        DP[2][0] = c + rmin;
+        DP[1][0] = b + Math.min(lmin, rmin);
+
+        DP[0][1] = a + lmax;
+        DP[2][1] = c + rmax;
+        DP[1][1] = b + Math.max(lmax, rmax);
     }
 }
