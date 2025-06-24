@@ -7,6 +7,7 @@ public class Main {
 
     static Tunnel TUNNEL = new Tunnel();
     static String NEW_LINE = "\n";
+    static String SEPARATOR = "--";
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -27,16 +28,8 @@ public class Main {
         br.close();
 
         StringBuilder sb = new StringBuilder();
-        readyToPrint(TUNNEL, sb, "");
+        TUNNEL.readyToPrint(sb, "");
         System.out.println(sb);
-    }
-
-    private static void readyToPrint(Tunnel tunnel, StringBuilder sb, String prefix) {
-
-        tunnel.downstairs.values().forEach(next -> {
-            sb.append(prefix).append(next.prey).append(NEW_LINE);
-            readyToPrint(next, sb, "--" + prefix);
-        });
     }
 
     static class Tunnel {
@@ -51,6 +44,14 @@ public class Main {
         Tunnel(String prey) {
             this.prey = prey;
             this.downstairs = new TreeMap<>();
+        }
+
+        public void readyToPrint(StringBuilder sb, String prefix) {
+
+            this.downstairs.keySet().forEach(next -> {
+                sb.append(prefix).append(next).append(NEW_LINE);
+                this.downstairs.get(next).readyToPrint(sb, SEPARATOR + prefix);
+            });
         }
     }
 }
