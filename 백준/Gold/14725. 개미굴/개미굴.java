@@ -17,13 +17,11 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             st.nextToken();
 
-            int j = 1;
-            SortedMap<Tunnel, Tunnel> map = TUNNEL.downstairs;
+            SortedMap<String, Tunnel> map = TUNNEL.downstairs;
             while(st.hasMoreTokens()){
-                Tunnel next = new Tunnel(j++, st.nextToken());
-                next = map.getOrDefault(next, next);
-                map.put(next, next);
-                map = next.downstairs;
+                String s = st.nextToken();
+                map.putIfAbsent(s, new Tunnel(s));
+                map = map.get(s).downstairs;
             }
         }
         br.close();
@@ -42,32 +40,17 @@ public class Main {
     }
 
     static class Tunnel {
-        int depth;
         String prey;
-        SortedMap<Tunnel, Tunnel> downstairs;
+        SortedMap<String, Tunnel> downstairs;
 
-        Tunnel(){
-            this.depth = 0;
+        Tunnel() {
             this.prey = "";
-            this.downstairs = new TreeMap<>((a, b) ->
-                    a.depth == b.depth ? a.prey.compareTo(b.prey) : a.depth - b.depth);
+            this.downstairs = new TreeMap<>();
         }
 
-        Tunnel(int depth, String prey) {
-            this.depth = depth;
+        Tunnel(String prey) {
             this.prey = prey;
-            this.downstairs = new TreeMap<>((a, b) ->
-                    a.depth == b.depth ? a.prey.compareTo(b.prey) : a.depth - b.depth);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return this.depth == ((Tunnel)obj).depth && this.prey.equals(((Tunnel)obj).prey);
-        }
-
-        @Override
-        public int hashCode() {
-            return this.depth + this.prey.hashCode();
+            this.downstairs = new TreeMap<>();
         }
     }
 }
