@@ -18,7 +18,7 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             st.nextToken();
 
-            SortedMap<String, Tunnel> map = TUNNEL.downstairs;
+            Map<String, Tunnel> map = TUNNEL.downstairs;
             while(st.hasMoreTokens()){
                 String s = st.nextToken();
                 map.putIfAbsent(s, new Tunnel(s));
@@ -34,7 +34,7 @@ public class Main {
 
     static class Tunnel {
         String prey;
-        SortedMap<String, Tunnel> downstairs;
+        Map<String, Tunnel> downstairs;
 
         Tunnel() {
             this.prey = "";
