@@ -22,6 +22,7 @@ public class Main {
         EDGES = new ArrayList<>(V);
         for (int i = 0; i < V; i++) {
             EDGES.add(i, new HashMap<>());
+            DIST[i] = Integer.MAX_VALUE;
         }
         for (int i = 0; i < e; i++) {
             st = new StringTokenizer(br.readLine());
@@ -35,12 +36,13 @@ public class Main {
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < V; i++) {
-            sb.append(i == S ? 0 : DIST[i]== 0 ? "INF": DIST[i]).append("\n");
+            sb.append(i == S ? 0 : DIST[i]== Integer.MAX_VALUE ? "INF": DIST[i]).append("\n");
         }
         System.out.println(sb);
     }
 
     private static void dijkstra() {
+        VISITED = new boolean[V];
 
         int[] start = {0, S};
         PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparing(x -> x[0]));
@@ -51,10 +53,14 @@ public class Main {
             int w = cur[0];
             int u = cur[1];
 
+            if (VISITED[u]) continue;
+            DIST[u] = w;
+            VISITED[u] = true;
+
             EDGES.get(u).forEach((key, value) -> {
-                if (DIST[key] != 0 && DIST[key] <= w + value) return;
-                DIST[key] = w + value;
+                if (VISITED[key] || DIST[key] <= w + value) return;
                 pq.add(new int[]{w + value, key});
+                DIST[key] = w + value;
             });
         }
     }
