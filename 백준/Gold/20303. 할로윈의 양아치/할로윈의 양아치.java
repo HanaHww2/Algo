@@ -10,7 +10,7 @@ public class Main {
   static int N, M, K;
   static int[] candy;
   static List<Integer>[] friendship;
-  static int[][] dp;
+  static int[] dp;
   static List<int[]> possible;
 
   public static void main(String[] args) throws IOException {
@@ -40,23 +40,20 @@ public class Main {
     }
 
     search();
-    System.out.println(dp[possible.size()][K-1]);
+    System.out.println(dp[K-1]);
   }
 
   private static void search() {
     init();
 
     int psize = possible.size();
-    dp = new int[psize + 1][K];
+    dp = new int[K];
 
     for (int i = 1; i < psize + 1; i++) {
       int w = possible.get(i-1)[1];
-      for (int j = 1; j < K; j++) {
-        if (j < w) {
-          dp[i][j] = dp[i - 1][j];
-          continue;
-        }
-        dp[i][j] = Math.max(Math.max(dp[i][j - 1], dp[i-1][j - w] + possible.get(i-1)[0]), dp[i-1][j]);
+      int v = possible.get(i-1)[0];
+      for (int j = K-1; j >= w; j--) {
+        dp[j] = Math.max(dp[j], dp[j-w] + v);
       }
     }
   }
