@@ -8,7 +8,6 @@ def solution(edges):
     
     graph = defaultdict(list)
     candidate = set()
-    visited = set()
     has_in = set()
     
     for e in edges:
