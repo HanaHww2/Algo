@@ -27,14 +27,14 @@ def solution(edges):
     answer.append(addition)
         
     def search(node:int, start:int):
-        cnt = 0
+        kind = 0
         for nxt in graph[node]:
             if len(graph[node]) > 1:
-                return 2
+                return 2 # 8자
             if nxt == start:
-                return 1
-            cnt = max(cnt, search(nxt, start))
-        return cnt
+                return 1 # 도넛
+            kind = max(kind, search(nxt, start))
+        return kind
     
         
     couter = Counter()
