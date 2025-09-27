@@ -29,25 +29,17 @@ def solution(dice):
         dfs(comb, 0, 0, 'a')
         dfs(list(remainder), 0, 0, 'b')
 
-        t_win = 0
-        t_lose = 0
-        t_tie = 0
-        for k in ac.keys():
-            win = 0
-            lose = 0
-            tie = 0
-            for x in bc.keys():
-                if x < k:
-                    win += bc[x]
-                elif x == k:
-                    tie += bc[x]
-                else:
-                    lose += bc[x]
-            t_win += win * ac[k]
-            t_lose += lose * ac[k]
-            t_tie += tie * ac[k]
+        b_max = max(bc.keys())
+        for i in range(1, b_max + 1):
+            bc[i] += bc[i-1]   
         
-        return (t_win / (t_win + t_lose + t_tie)) * 100
+        t_win = 0
+        a_total = 0
+        for k in ac.keys():
+            t_win += bc[min(k-1, b_max)]* ac[k]
+            a_total += ac[k]
+        
+        return (t_win / (a_total * bc[b_max])) * 100
     
     max_r = 0
     for comb in combinations(candi, l//2):
