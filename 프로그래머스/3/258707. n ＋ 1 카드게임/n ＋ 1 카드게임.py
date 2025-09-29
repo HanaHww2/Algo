@@ -19,20 +19,19 @@ def solution(coin, cards):
         nxt = cards[i]
         idx = table[l+1 - nxt]    
         
-        if idx < start and coin > 0:
+        if idx < start and coin > 0: 
             pair += 1
-            coin -= 1        
+            coin -= 1
+            # 코인은 한정적 자원으로 보충되지 않음, 더 많은 케이스 고려할 필요 없음
         elif idx < i:
             temp.append((idx, i))
         
         if (i-start) % 2 == 1:
-            print(pair)
             pair -= 1
             answer += 1
             
             if pair == -1:                
                 if temp and coin >= 2:
-                    print(temp, coin)
                     temp.pop()
                     pair += 1
                     coin -= 2
