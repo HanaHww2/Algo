@@ -1,38 +1,52 @@
-INF = 10 ** 10+1
+from collections import defaultdict, deque
 import heapq
+
 def solution(n, paths, gates, summits):
-    def findpath(q) :
-        while q :
-            cost,node = heapq.heappop(q)
-            if dp[node] < cost :
-                continue
-            for nextcost,nextnode in graph[node]:
-                if dp[nextnode] > max(nextcost,cost):
-                    dp[nextnode] = max(nextcost,cost)
-                    if nextnode in summits_set :
-                        continue
-                    heapq.heappush(q,[max(nextcost,cost),nextnode])
+    s_summits = set(summits)
+    s_gates = set(gates)
+    
+    INF = 10**8
+    graph = defaultdict(list)
+    
+    for (i, j, w) in paths:
+        graph[i].append((j, w))
+        graph[j].append((i, w))
+        
+    answer = [INF, INF]
+    
+    def bfs(gate):
+        nonlocal answer
+        
+        pq = [(0, gate)]
+        visited = set()
 
-    graph = [[] for _ in range(n+1)]
-    dp = [INF]*(n+1)
-    summits_set = set(summits)
-    for a,b,c in paths :
-        graph[a].append([c,b])
-        graph[b].append([c,a])
+        while pq:
+            (w, fr) = heapq.heappop(pq)
+            visited.add(fr)
 
-    q = []
-    for gate in gates :
-        dp[gate] = 0
-        heapq.heappush(q,[0,gate])
+            if answer[1] < w:
+                 return
+                    
+            if fr in s_summits:
+                if w < answer[1]:
+                    answer = (fr, w)
+                elif w == answer[1] and fr < answer[0]:
+                    answer = (fr, w)
+                return
+            
+            for (nxt, nw) in graph[fr]:
+                if nxt in s_gates or nxt in visited:
+                     continue
+                        
+                mnw = max(nw, w)
+                if answer[1] < mnw:
+                    continue
+                    
+                heapq.heappush(pq, (mnw, nxt))
+             
 
-    findpath(q)
+    for g in gates:
+        bfs(g)
 
-    min_cost,target = INF,0
-
-    summits.sort()
-    for summit in summits :
-        if dp[summit] < min_cost :
-            min_cost = dp[summit]
-            target= summit
-
-    return [target,min_cost]
+        
+    return answer
