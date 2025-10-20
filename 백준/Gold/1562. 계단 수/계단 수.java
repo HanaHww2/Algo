@@ -26,15 +26,14 @@ public class Main {
 
     for (int i = 2; i <= N; i++) {
       for (int j = 0; j <= 9; j++) {
-        if (j > 0) {
           for (int k = 0; k < 1 << 10; k++) {
-            DP[i][j][k | 1 << j] = (DP[i][j][k | 1 << j] + DP[i - 1][j - 1][k]) % MOD;
-          }
-        }
-        if (j < 9) {
-          for (int k = 0; k < 1 << 10; k++) {
-            DP[i][j][k | 1 << j] = (DP[i][j][k | 1 << j] + DP[i - 1][j + 1][k]) % MOD;
-          }
+            if (j > 0) {
+                DP[i][j][k | 1 << j] = (DP[i][j][k | 1 << j] + DP[i - 1][j - 1][k]) % MOD;
+          
+            }
+            if (j < 9) {
+                DP[i][j][k | 1 << j] = (DP[i][j][k | 1 << j] + DP[i - 1][j + 1][k]) % MOD;
+             }
         }
       }
     }
